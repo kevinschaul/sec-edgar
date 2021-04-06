@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import os
+import time
 import warnings
 
 from secedgar.cik_lookup import CIKLookup
@@ -173,6 +174,8 @@ class Filing(AbstractFiling):
             self.params["start"] += self.client.batch_size
             if len(data.find_all("filinghref")) == 0:  # no more filings
                 break
+            # Avoid SEC's 10 calls per second rate limit
+            time.sleep(7)
 
         txt_urls = [link[:link.rfind("-")].strip() + ".txt" for link in links]
 
