@@ -175,7 +175,7 @@ class Filing(AbstractFiling):
             if len(data.find_all("filinghref")) == 0:  # no more filings
                 break
             # Avoid SEC's 10 calls per second rate limit
-            time.sleep(7)
+            time.sleep(0.1)
 
         txt_urls = [link[:link.rfind("-")].strip() + ".txt" for link in links]
 
