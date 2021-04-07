@@ -35,7 +35,12 @@ class NetworkClient:
 
     _BASE = "http://www.sec.gov/"
 
-    def __init__(self, retry_count=3, batch_size=10, backoff_factor=0, rate_limit=10, user_agent="github.com/sec-edgar/sec-edgar"):
+    def __init__(self,
+                 retry_count=3,
+                 batch_size=10,
+                 backoff_factor=0,
+                 rate_limit=10,
+                 user_agent="github.com/sec-edgar/sec-edgar"):
         self.retry_count = retry_count
         self.batch_size = batch_size
         self.backoff_factor = backoff_factor
@@ -157,14 +162,14 @@ class NetworkClient:
             EDGARQueryError: If problems arise when making query.
         """
         prepared_url = self._prepare_query(path)
-        headers = {"user-agent": self.user_agent}
+        headers = {"User-Agent": self.user_agent}
         with requests.Session() as session:
             retry = Retry(self.retry_count, backoff_factor=self.backoff_factor,
                           raise_on_status=True)
             session.mount(self._BASE, adapter=HTTPAdapter(max_retries=retry))
             session.hooks["response"].append(self._validate_response)
             response = session.get(prepared_url, params=params,
-                          headers=headers, **kwargs)
+                                   headers=headers, **kwargs)
             return response
 
     def get_soup(self, path, params, **kwargs):
